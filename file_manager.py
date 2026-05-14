@@ -2,6 +2,8 @@ import json
 import os
 import tool
 import datetime
+import random
+from faker import Faker
 
 def load_file(file):
     try:
@@ -59,6 +61,16 @@ def select_virus():
     return virus_list[pilihan - 1]
 
 
+def create_penumpang(banyak):
+    penumpang = []
+    num = 1
+    fake = Faker()
+    for _ in range(banyak):
+        penumpang.append({"id" : num, "nama" : str(fake.name()), "umur":random.randint(1,90), "status":"rentan", "lokasi" : None})
+        num += 1
+    return penumpang
+
+
 def new_file():
     template = {
     "save_name": None,
@@ -103,6 +115,8 @@ def new_file():
     virus = select_virus()
     with open(f"data/virus/{virus}", "r") as f:
         template["virus"] = json.load(f)
-
+    banyak_penumpang = tool.input_angka(pesan_input="Masukan Banyak Penumpang: ")
+    template["penumpang"] = create_penumpang(banyak_penumpang)
+    return template
 
     return save_name

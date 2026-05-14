@@ -1,5 +1,9 @@
 import file_manager
 import tool
 import datetime
+from faker import Faker
 
-file_manager.new_file()
+a = file_manager.new_file()
+
+for i in a:
+    print(i, "isinya", a[i])
