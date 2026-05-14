@@ -1,0 +1,6 @@
+{
+    "nama":"Hantavirus",
+    "tingkat_penularan" : 0.3,
+    "masa_inkubasi": 5,
+    "mortalitas": 0.1
+}
