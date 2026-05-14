@@ -1,6 +1,7 @@
 import json
 import os
 import tool
+import datetime
 
 def load_file(file):
     try:
@@ -27,7 +28,20 @@ def create_virus():
     "masa_inkubasi": masa_inkubasi,
     "mortalitas": mortalitas
     }
-    nama_file = f"{nama.lower()}.json"
+    nama_file = f"{nama.lower()}"
+
+    # Biar virus bisa duplikat
+    if os.path.exists(f"data/virus/{nama_file}.json"):
+        num = 1
+        base_name = nama_file
+        while os.path.exists(f"data/virus/{nama_file}.json"):
+            nama_file = f"{base_name}({num})"
+            num += 1
+        nama_file = nama_file + ".json"
+    else:
+        nama_file = f"{nama_file}.json"
+    # ===================================
+
     with open(f"data/virus/{nama_file}","w") as f:
         json.dump(virus,f)
     return nama_file
@@ -40,18 +54,17 @@ def select_virus():
         virus = load_virus(i)
         print(f"{num}. {virus["nama"]} | Tingkat Penularan: {virus["tingkat_penularan"] * 100}% | Masa Inkubasi: {virus["masa_inkubasi"]} Hari | Mortalitas: {virus["mortalitas"] * 100}%")
         num += 1
-    print("0. Buat virus baru")
     print("=" * 75)
-    pilihan = tool.input_angka_tertentu(0,len(virus_list), pesan_rentang="[Error] Virus Tidak Ditemukan", pesan_input=">> ")
-    if pilihan == 0:
-        return create_virus()
-    else:
-        return virus_list[pilihan - 1]
+    pilihan = tool.input_angka_tertentu(1,len(virus_list), pesan_rentang="[Error] Virus Tidak Ditemukan", pesan_input=">> ")
+    return virus_list[pilihan - 1]
+
 
 def new_file():
     template = {
+    "save_name": None,
+    "save_date": str(datetime.datetime.now()),
     "nama_kapal": None,
-    "hari": None,
+    "hari": 1,
     "virus": {
         "nama":None,
         "tingkat_penularan":None,
@@ -60,12 +73,36 @@ def new_file():
     },
     "penumpang": [],
     "statistik": {
-        "rentan": None,
-        "terpapar": None,
-        "terinfeksi": None,
-        "sembuh": None,
-        "meninggal": None
+        "rentan": 0,
+        "terpapar": 0,
+        "terinfeksi": 0,
+        "sembuh": 0,
+        "meninggal": 0
     },
     "log_harian": []
 }
-    return template
+    
+    print("=" * 50)
+    template["save_name"] = input("Masukan Nama Save: ")
+    save_name = f"{template["save_name"].replace(" ","")}"
+
+    # Biar save file bisa duplikat
+    if os.path.exists(f"data/save/{save_name}.json"):
+        num = 1
+        base_name = save_name
+        while os.path.exists(f"data/save/{save_name}.json"):
+            save_name = f"{base_name}({num})"
+            num += 1
+        save_name = save_name + ".json"
+    else:
+        save_name = f"{save_name}.json"
+    # =================================
+
+
+    template["nama_kapal"] = input("Masukan Nama Kapal: ")
+    virus = select_virus()
+    with open(f"data/virus/{virus}", "r") as f:
+        template["virus"] = json.load(f)
+
+
+    return save_name

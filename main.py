@@ -1,4 +1,5 @@
-import save_manager
+import file_manager
 import tool
+import datetime
 
-print(save_manager.select_virus())
+file_manager.new_file()
