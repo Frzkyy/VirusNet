@@ -95,10 +95,16 @@ def new_file():
 }
     
     print("=" * 50)
+    print("                 VirusNet v1.0")
+    print("   Konfigurasi Awal Simulasi Penyebaran Virus")
+    print("=" * 50)
+
     template["save_name"] = input("Masukan Nama Save: ")
-    save_name = f"{template["save_name"].replace(" ","")}"
+    print(f"[Sistem] Membuat File \"{template["save_name"]}\"...\n")
+
 
     # Biar save file bisa duplikat
+    save_name = f"{template["save_name"].replace(" ","")}"
     if os.path.exists(f"data/save/{save_name}.json"):
         num = 1
         base_name = save_name
@@ -112,11 +118,18 @@ def new_file():
 
 
     template["nama_kapal"] = input("Masukan Nama Kapal: ")
+    print(f"[Sistem] Mengubah Nama Kapal Menajadi \"{template['nama_kapal']}\"...\n")
+
     virus = select_virus()
     with open(f"data/virus/{virus}", "r") as f:
         template["virus"] = json.load(f)
-    banyak_penumpang = tool.input_angka(pesan_input="Masukan Banyak Penumpang: ")
-    template["penumpang"] = create_penumpang(banyak_penumpang)
-    return template
+    print(f"[Sistem] Meluncurkan Virus \"{template["virus"]["nama"]}\"...\n")
 
+
+    banyak_penumpang = tool.input_angka(pesan_input="Masukan Banyak Penumpang: ")
+    print(f"[Sistem] Memasukan {banyak_penumpang} Penumpang Kedalam Kapal {template['nama_kapal']}...\n")
+    template["penumpang"] = create_penumpang(banyak_penumpang)
+
+    with open(f"data/save/{save_name}","w") as f:
+        json.dump(template, f)
     return save_name
