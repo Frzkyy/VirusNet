@@ -4,6 +4,7 @@ import tool
 import datetime
 import random
 from faker import Faker
+import time
 
 def load_file(file):
     try:
@@ -47,6 +48,7 @@ def create_virus():
     with open(f"data/virus/{nama_file}","w") as f:
         json.dump(virus,f)
     return nama_file
+
 
 def select_virus():
     virus_list = os.listdir("data/virus")
@@ -101,6 +103,7 @@ def new_file():
 
     template["save_name"] = input("Masukan Nama Save: ")
     print(f"[Sistem] Membuat File \"{template["save_name"]}\"...\n")
+    time.sleep(5)
 
 
     # Biar save file bisa duplikat
@@ -128,8 +131,26 @@ def new_file():
 
     banyak_penumpang = tool.input_angka(pesan_input="Masukan Banyak Penumpang: ")
     print(f"[Sistem] Memasukan {banyak_penumpang} Penumpang Kedalam Kapal {template['nama_kapal']}...\n")
+    time.sleep(4)
+    
     template["penumpang"] = create_penumpang(banyak_penumpang)
 
     with open(f"data/save/{save_name}","w") as f:
         json.dump(template, f)
     return save_name
+
+def konfigurasi_virus():
+    print("=" * 50)
+    print("                Konfigurasi Virus")
+    print("=" * 50)
+    print("1. Ingin Mengedit Virus")
+    print("2. Ingin Menghapus Virus")
+    print("3. Membuat Virus Baru")
+    print("0. Keluar")
+    print("=" * 50)
+    pilihan = tool.input_angka_tertentu(0,3,pesan_input=">> ")
+    print()
+    match pilihan:
+        case 0:
+            return
+
