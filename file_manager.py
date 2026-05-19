@@ -103,7 +103,7 @@ def new_file():
 
     template["save_name"] = input("Masukan Nama Save: ")
     print(f"[Sistem] Membuat File \"{template["save_name"]}\"...\n")
-    time.sleep(5)
+    time.sleep(1)
 
 
     # Biar save file bisa duplikat
@@ -131,7 +131,7 @@ def new_file():
 
     banyak_penumpang = tool.input_angka(pesan_input="Masukan Banyak Penumpang: ")
     print(f"[Sistem] Memasukan {banyak_penumpang} Penumpang Kedalam Kapal {template['nama_kapal']}...\n")
-    time.sleep(4)
+    time.sleep(1)
     
     template["penumpang"] = create_penumpang(banyak_penumpang)
 

@@ -1,3 +1,6 @@
+import os
+import platform
+
 def input_angka(pesan_eror="[Error] Masukan Hanya Angka",pesan_input=None, tipe="int"):
     while True:
         try:
@@ -25,3 +28,10 @@ def input_angka_tertentu(batas_bawah, batas_atas ,pesan_eror="[Error] Masukan Ha
             return pilihan
         else:
             print(pesan_rentang)
+
+def clear_screen():
+    os_name = platform.system()
+    if os_name == "Windows":
+        os.system("cls")
+    elif os_name == "Linux":
+        os.system("clear")
