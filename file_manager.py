@@ -5,7 +5,7 @@ import datetime
 import random
 from faker import Faker
 import time
-import virus_maanger
+import virus_manager
 
 def load_file(file):
     try:
@@ -76,7 +76,7 @@ def new_file():
     template["nama_kapal"] = input("Masukan Nama Kapal: ")
     print(f"[Sistem] Mengubah Nama Kapal Menajadi \"{template['nama_kapal']}\"...\n")
 
-    virus = virus_maanger.select_virus()
+    virus = virus_manager.select_virus()
     with open(f"data/virus/{virus}", "r") as f:
         template["virus"] = json.load(f)
     print(f"[Sistem] Meluncurkan Virus \"{template["virus"]["nama"]}\"...\n")
@@ -92,18 +92,4 @@ def new_file():
         json.dump(template, f)
     return save_name
 
-def konfigurasi_virus():
-    print("=" * 50)
-    print("                Konfigurasi Virus")
-    print("=" * 50)
-    print("1. Ingin Mengedit Virus")
-    print("2. Ingin Menghapus Virus")
-    print("3. Membuat Virus Baru")
-    print("0. Keluar")
-    print("=" * 50)
-    pilihan = tool.input_angka_tertentu(0,3,pesan_input=">> ")
-    print()
-    match pilihan:
-        case 0:
-            return
 

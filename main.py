@@ -2,6 +2,8 @@ import file_manager
 import tool
 import datetime
 import os
+import virus_manager
+
 def about():
     print("=" * 50)
     print("            Aplikasi Ini Dibuat Oleh:")
@@ -39,7 +41,7 @@ while True:
         case 2:
             pass
         case 3:
-            file_manager.konfigurasi_virus()
+            virus_manager.konfigurasi_virus()
         case 4:
             about()
         case 0:
