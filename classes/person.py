@@ -1,3 +1,5 @@
+import random
+
 class Person:
     def __init__(self,id,nama,umur,status,lokasi):
         self.id = id
@@ -35,6 +37,18 @@ class Person:
         print("Umur     :", self.umur)
         print("Status   :", self.status)
         print("Lokasi   :", self.lokasi)
+
+    def update_status(self, masa_inkubasi, mortalitas):
+        if self.status == "terpapar":
+            self.hari_terpapar += 1
+            if self.hari_terpapar >= masa_inkubasi:
+                self.status = "terinfeksi"
+        elif self.status == "terinfeksi":
+            self.hari_terinfeksi += 1
+            if random.random() <= mortalitas:
+                self.meninggal()
+            elif self.hari_terinfeksi >= 5:
+                self.sembuh()
 
     def __str__(self):
 

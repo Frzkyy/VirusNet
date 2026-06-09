@@ -3,6 +3,7 @@ import random
 from classes.person import Person
 from classes.location import Location
 from structures.graph import Graph
+from structures.hash_table import HashTable
 
 
 class Ship:
@@ -14,33 +15,37 @@ class Ship:
         self.jumlah_penumpang = jumlah_penumpang
 
         self.penumpang = []
+        self.db = HashTable(kapasitas=jumlah_penumpang * 2)
 
         self.jaringan = Graph()
 
     # generate seluruh penumpang
-    def generate_penumpang(self):
+    # daftar_nama: list nama dari luar (misal dari Faker di file_manager)
+    # kalau tidak dikirim, fallback ke nama default
+    def generate_penumpang(self, daftar_nama=None):
 
         for i in range(1, self.jumlah_penumpang + 1):
 
             deck = random.randint(1, self.jumlah_deck)
-
             ruangan = random.randint(1, 10)
-
             lokasi = Location(deck, ruangan)
+
+            if daftar_nama and i <= len(daftar_nama):
+                nama = daftar_nama[i - 1]
+            else:
+                nama = f"Penumpang_{i}"
 
             orang = Person(
                 i,
-                f"Penumpang_{i}",
+                nama,
                 random.randint(18, 60),
                 "rentan",
                 lokasi
             )
 
             self.penumpang.append(orang)
-
-            self.jaringan.tambah_penumpang(
-                orang.id
-            )
+            self.db.set(orang.id, orang)
+            self.jaringan.tambah_penumpang(orang.id)
 
         self.generate_koneksi()
 
@@ -60,27 +65,16 @@ class Ship:
                     )
 
                     if lokasi_sama:
+                        self.jaringan.tambah_koneksi(p1.id, p2.id)
 
-                        self.jaringan.tambah_koneksi(
-                            p1.id,
-                            p2.id
-                        )
-
-    # cari penumpang berdasarkan id
+    # cari penumpang berdasarkan id — O(1) via HashTable
     def cari_penumpang(self, id_penumpang):
-
-        for penumpang in self.penumpang:
-
-            if penumpang.id == id_penumpang:
-                return penumpang
-
-        return None
+        return self.db.get(id_penumpang)
 
     # tampil semua penumpang
     def tampilkan_penumpang(self):
 
         for penumpang in self.penumpang:
-
             print(penumpang)
 
     # statistik status
@@ -95,7 +89,6 @@ class Ship:
         }
 
         for penumpang in self.penumpang:
-
             data[penumpang.status] += 1
 
         return data
