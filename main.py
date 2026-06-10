@@ -3,6 +3,8 @@ import tool
 import datetime
 import os
 import virus_manager
+import simulasi
+
 
 def about():
     print("=" * 50)
@@ -28,6 +30,19 @@ def menu():
     print("=" * 50)
 
 
+def pilih_pasien_0(kapal):
+    print("\n=== PILIH PASIEN 0 ===")
+    print("(Orang pertama yang terinfeksi)\n")
+    kapal.tampilkan_penumpang()
+    print()
+    id_pasien = tool.input_angka_tertentu(1, kapal.jumlah_penumpang, pesan_input="Masukan ID pasien 0: ")
+    pasien = kapal.cari_penumpang(id_pasien)
+    if pasien:
+        pasien.status = "terinfeksi"
+        print(f"\n[Sistem] {pasien.nama} ditetapkan sebagai pasien 0.\n")
+    return id_pasien
+
+
 while True:
 
     tool.clear_screen()
@@ -37,9 +52,27 @@ while True:
     print()
     match pilihan:
         case 1:
-            file_manager.new_file()
+            save_name = file_manager.new_file()
+            kapal, virus, data = file_manager.load_ship(save_name)
+            if kapal:
+                id_pasien_0 = pilih_pasien_0(kapal)
+                input("Tekan Enter untuk mulai simulasi...")
+                simulasi.jalankan_simulasi(kapal, virus, data, save_name, id_pasien_0)
         case 2:
-            pass
+            save_name = file_manager.pilih_save()
+            if save_name:
+                kapal, virus, data = file_manager.load_ship(save_name)
+                if kapal:
+                    # Cek apakah sudah ada yang terinfeksi (lanjutan save)
+                    ada_terinfeksi = any(p.status in ["terinfeksi", "terpapar"] for p in kapal.penumpang)
+                    if not ada_terinfeksi:
+                        id_pasien_0 = pilih_pasien_0(kapal)
+                    else:
+                        # Ambil pasien pertama yang terinfeksi sebagai root pohon
+                        id_pasien_0 = next(p.id for p in kapal.penumpang if p.status == "terinfeksi")
+                        print(f"[Sistem] Melanjutkan simulasi hari ke-{data['hari']}...\n")
+                    input("Tekan Enter untuk mulai simulasi...")
+                    simulasi.jalankan_simulasi(kapal, virus, data, save_name, id_pasien_0)
         case 3:
             virus_manager.konfigurasi_virus()
         case 4:
@@ -50,5 +83,3 @@ while True:
             print("=" * 20)
 
             break
-    
-

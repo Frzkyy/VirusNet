@@ -1,4 +1,5 @@
 import random
+from structures.linked_list import DoubleLinkedList
 
 class Person:
     def __init__(self,id,nama,umur,status,lokasi):
@@ -11,21 +12,21 @@ class Person:
         self.hari_terpapar = 0
         self.hari_terinfeksi = 0
 
+        self.riwayat_status = DoubleLinkedList()
+        self.riwayat_status.append(status)
+
     def terpapar(self):
         if self.status == "rentan":
             self.status = "terpapar"
-
-    def update_status(self, masa_inkubasi):
-        if self.status == "terpapar":
-            self.hari_terpapar += 1
-            if self.hari_terpapar >= masa_inkubasi:
-                self.status = "terinfeksi"
+            self.riwayat_status.append("terpapar")
 
     def sembuh(self):
         self.status = "sembuh"
+        self.riwayat_status.append("sembuh")
 
     def meninggal(self):
         self.status = "meninggal"
+        self.riwayat_status.append("meninggal")
 
     def pindah_lokasi(self, lokasi_baru):
         self.lokasi = lokasi_baru
@@ -43,6 +44,7 @@ class Person:
             self.hari_terpapar += 1
             if self.hari_terpapar >= masa_inkubasi:
                 self.status = "terinfeksi"
+                self.riwayat_status.append("terinfeksi")
         elif self.status == "terinfeksi":
             self.hari_terinfeksi += 1
             if random.random() <= mortalitas:
@@ -53,7 +55,7 @@ class Person:
     def __str__(self):
 
         return (
-            f"{self.nama} | "
+            f"[{self.id}] {self.nama} | "
             f"{self.status} | "
             f"{self.lokasi}"
         )
