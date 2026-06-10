@@ -18,6 +18,7 @@ class Ship:
         self.db = HashTable(kapasitas=jumlah_penumpang * 2)
 
         self.jaringan = Graph()
+        self.deck_terkunci = set()
 
     # generate seluruh penumpang
     # daftar_nama: list nama dari luar (misal dari Faker di file_manager)
@@ -92,3 +93,22 @@ class Ship:
             data[penumpang.status] += 1
 
         return data
+    
+    def generate_koneksi(self):
+
+        for p1 in self.penumpang:
+            if p1.lokasi.deck in self.deck_terkunci:
+                continue
+
+            for p2 in self.penumpang:
+                if p2.lokasi.deck in self.deck_terkunci:
+                    continue
+                if p1.id != p2.id:
+                    lokasi_sama = (
+                        p1.lokasi.deck == p2.lokasi.deck
+                        and
+                        p1.lokasi.ruangan == p2.lokasi.ruangan
+                    )
+
+                    if lokasi_sama:
+                        self.jaringan.tambah_koneksi(p1.id, p2.id)

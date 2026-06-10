@@ -20,13 +20,6 @@ class Graph:
 
         return self.jaringan.get(id_penumpang, [])
 
-    def lockdown_deck(self, daftar_penumpang, deck):
-
-        for penumpang in daftar_penumpang:
-
-            if penumpang.lokasi.deck == deck:
-
-                self.jaringan[penumpang.id] = []
 
     def tampilkan_graph(self):
 

@@ -188,8 +188,14 @@ def _menu_lockdown(kapal, deck_terkunci):
         print(f"[Info] Deck {deck} sudah dalam kondisi lockdown.")
         return
 
-    kapal.jaringan.lockdown_deck(kapal.penumpang, deck)
+    kapal.deck_terkunci.add(deck)
     deck_terkunci.add(deck)
+
+
+    for pid in kapal.jaringan.jaringan:
+        kapal.jaringan.jaringan[pid] = []
+
+    kapal.generate_koneksi()
     print(f"[Sistem] Deck {deck} berhasil di-lockdown. Semua koneksi di deck ini diputus.")
 
 
@@ -206,21 +212,13 @@ def _menu_buka_lockdown(kapal, deck_terkunci):
         print(f"[Info] Deck {deck} tidak sedang di-lockdown.")
         return
 
-    # Restore koneksi dengan generate ulang hanya untuk deck tersebut
-    for p1 in kapal.penumpang:
-        if p1.lokasi.deck == deck:
-            kapal.jaringan.jaringan[p1.id] = []
+    kapal.deck_terkunci.remove(deck)
+    deck_terkunci.remove(deck)
 
-    for p1 in kapal.penumpang:
-        for p2 in kapal.penumpang:
-            if p1.id != p2.id:
-                if p1.lokasi.deck == deck or p2.lokasi.deck == deck:
-                    lokasi_sama = (
-                        p1.lokasi.deck == p2.lokasi.deck and
-                        p1.lokasi.ruangan == p2.lokasi.ruangan
-                    )
-                    if lokasi_sama:
-                        kapal.jaringan.tambah_koneksi(p1.id, p2.id)
+    for pid in kapal.jaringan.jaringan:
+        kapal.jaringan.jaringan[pid] = []
+
+    kapal.generate_koneksi()
 
     deck_terkunci.remove(deck)
     print(f"[Sistem] Lockdown deck {deck} berhasil dibuka.")

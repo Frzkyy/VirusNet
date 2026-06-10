@@ -37,7 +37,7 @@ def cari_penumpang_berdasarkan_nama(data_penumpang, nama):
     hasil = []
 
     for penumpang in data_penumpang:
-        if nama.lower() in penumpang["nama"].lower():
+        if nama.lower() in penumpang.nama.lower():
             hasil.append(penumpang)
 
     return hasil
@@ -47,7 +47,7 @@ def cari_penumpang_berdasarkan_status(data_penumpang, status):
     hasil = []
 
     for penumpang in data_penumpang:
-        if penumpang["status"].lower() == status.lower():
+        if penumpang.status.lower() == status.lower():
             hasil.append(penumpang)
 
     return hasil
