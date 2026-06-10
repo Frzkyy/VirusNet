@@ -220,7 +220,6 @@ def _menu_buka_lockdown(kapal, deck_terkunci):
 
     kapal.generate_koneksi()
 
-    deck_terkunci.remove(deck)
     print(f"[Sistem] Lockdown deck {deck} berhasil dibuka.")
 
 
@@ -317,7 +316,7 @@ def _menu_cari_penumpang(kapal):
             riwayat.display_forward()
 
 
-def _simpan(kapal, virus, data, save_name):
+def _simpan(kapal, virus, data, save_name, pohon):
     data["save_date"] = str(datetime.datetime.now())
     data["statistik"] = kapal.statistik()
 
@@ -339,6 +338,8 @@ def _simpan(kapal, virus, data, save_name):
         json.dump(data, f)
 
     print(f"[Sistem] Simulasi berhasil disimpan ke \"{save_name}\".")
+    data["pohon_penularan"] = _pohon_ke_dict(pohon.root)
+    data["id_pasien_0"] = pohon.root.data
 
 
 def _menu_simulasi(hari):
@@ -369,7 +370,12 @@ def jalankan_simulasi(kapal, virus, data, save_name, id_pasien_0):
     """
 
     # Inisialisasi struktur data simulasi
-    pohon           = InfectionTree(id_pasien_0)
+    if "pohon_penularan" in data and data["pohon_penularan"]:
+        root = _dict_ke_pohon(data["pohon_penularan"])
+        pohon = InfectionTree(id_pasien_0)
+        pohon.root = root
+    else:
+        pohon = InfectionTree(id_pasien_0)
     antrian_isolasi = Queue()
     riwayat_aksi    = Stack()
     deck_terkunci   = set()
@@ -407,12 +413,26 @@ def jalankan_simulasi(kapal, virus, data, save_name, id_pasien_0):
             _menu_cari_penumpang(kapal)
 
         elif pilihan == 7:
-            _simpan(kapal, virus, data, save_name)
+            _simpan(kapal, virus, data, save_name, pohon)
 
         elif pilihan == 0:
             simpan = input("\nSimpan sebelum keluar? (y/n): ").strip().lower()
             if simpan == "y":
-                _simpan(kapal, virus, data, save_name)
+                _simpan(kapal, virus, data, save_name, pohon)
             break
 
         input("\nTekan Enter untuk melanjutkan...")
+
+def _pohon_ke_dict(node):
+    """Rekursif: ubah TreeNode jadi dict."""
+    return {
+        "id": node.data,
+        "children": [_pohon_ke_dict(child) for child in node.children]
+    }
+
+def _dict_ke_pohon(d):
+    """Rekursif: ubah dict balik jadi TreeNode."""
+    node = TreeNode(d["id"])
+    for child_dict in d["children"]:
+        node.add_child(_dict_ke_pohon(child_dict))
+    return node

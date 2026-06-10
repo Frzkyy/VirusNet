@@ -50,23 +50,6 @@ class Ship:
 
         self.generate_koneksi()
 
-    # generate koneksi antar penumpang
-    def generate_koneksi(self):
-
-        for p1 in self.penumpang:
-
-            for p2 in self.penumpang:
-
-                if p1.id != p2.id:
-
-                    lokasi_sama = (
-                        p1.lokasi.deck == p2.lokasi.deck
-                        and
-                        p1.lokasi.ruangan == p2.lokasi.ruangan
-                    )
-
-                    if lokasi_sama:
-                        self.jaringan.tambah_koneksi(p1.id, p2.id)
 
     # cari penumpang berdasarkan id — O(1) via HashTable
     def cari_penumpang(self, id_penumpang):
