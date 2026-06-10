@@ -1,5 +1,9 @@
 import random
-
+import tool
+import json
+import datetime
+from features.sorting import bubble_sort_evakuasi, cari_penumpang_berdasarkan_id, cari_penumpang_berdasarkan_lokasi
+from structures.linked_list import DoubleLinkedList, CircularLinkedList
 from structures.tree import InfectionTree, TreeNode
 from structures.queue import Queue
 from structures.stack import Stack
@@ -139,11 +143,7 @@ def _cari_node(node, target_id):
             return hasil
     return None
 
-import tool
-import json
-import datetime
-from features.sorting import bubble_sort_evakuasi, cari_penumpang_berdasarkan_id, cari_penumpang_berdasarkan_lokasi
-from structures.linked_list import DoubleLinkedList, CircularLinkedList
+
 
 
 def _grafik_ascii(log_harian):
@@ -333,13 +333,13 @@ def _simpan(kapal, virus, data, save_name, pohon):
         })
 
     data["penumpang"] = penumpang_baru
+    data["pohon_penularan"] = _pohon_ke_dict(pohon.root)
+    data["id_pasien_0"] = pohon.root.data
 
     with open(f"data/save/{save_name}", "w") as f:
         json.dump(data, f)
 
     print(f"[Sistem] Simulasi berhasil disimpan ke \"{save_name}\".")
-    data["pohon_penularan"] = _pohon_ke_dict(pohon.root)
-    data["id_pasien_0"] = pohon.root.data
 
 
 def _menu_simulasi(hari):

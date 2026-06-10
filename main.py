@@ -69,7 +69,7 @@ while True:
                         id_pasien_0 = pilih_pasien_0(kapal)
                     else:
                         # Ambil pasien pertama yang terinfeksi sebagai root pohon
-                        id_pasien_0 = next(p.id for p in kapal.penumpang if p.status == "terinfeksi")
+                        id_pasien_0 = next((p.id for p in kapal.penumpang if p.status == "terinfeksi"),None)
                         print(f"[Sistem] Melanjutkan simulasi hari ke-{data['hari']}...\n")
                     input("Tekan Enter untuk mulai simulasi...")
                     simulasi.jalankan_simulasi(kapal, virus, data, save_name, id_pasien_0)

@@ -79,6 +79,9 @@ class Ship:
     
     def generate_koneksi(self):
 
+        for pid in self.jaringan.jaringan:
+            self.jaringan.jaringan[pid] = []
+
         for p1 in self.penumpang:
             if p1.lokasi.deck in self.deck_terkunci:
                 continue
