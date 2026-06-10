@@ -105,7 +105,7 @@ def new_file():
 
 
 def pilih_save():
-    save_list = os.listdir("data/save")
+    save_list = sorted(os.listdir("data/save"))
 
     if not save_list:
         print("[Error] Tidak ada save file yang tersedia.")

@@ -1,7 +1,5 @@
 import file_manager
 import tool
-import datetime
-import os
 import virus_manager
 import simulasi
 

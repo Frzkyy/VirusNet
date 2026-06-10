@@ -78,16 +78,25 @@ class Ship:
         return data
     
     def generate_koneksi(self):
-
+    # Reset semua koneksi terlebih dahulu
         for pid in self.jaringan.jaringan:
             self.jaringan.jaringan[pid] = []
 
+        # Status yang tidak ikut berinteraksi (tidak bisa menular / tertular)
+        status_nonaktif = {"meninggal", "sembuh"}
+
         for p1 in self.penumpang:
+            # Skip penumpang di deck terkunci
             if p1.lokasi.deck in self.deck_terkunci:
+                continue
+            # Skip penumpang yang sudah tidak aktif
+            if p1.status in status_nonaktif:
                 continue
 
             for p2 in self.penumpang:
                 if p2.lokasi.deck in self.deck_terkunci:
+                    continue
+                if p2.status in status_nonaktif:
                     continue
                 if p1.id != p2.id:
                     lokasi_sama = (

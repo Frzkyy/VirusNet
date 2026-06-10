@@ -38,8 +38,6 @@ def next_day(kapal, virus, pohon, antrian_isolasi, riwayat_aksi):
             penumpang.lokasi.ruangan = ruangan_baru
 
     # Rebuild graph berdasarkan lokasi baru
-    for pid in kapal.jaringan.jaringan:
-        kapal.jaringan.jaringan[pid] = []
     kapal.generate_koneksi()
 
     # ── 1. Proses penyebaran ────────────────────────────
@@ -191,10 +189,6 @@ def _menu_lockdown(kapal, deck_terkunci):
     kapal.deck_terkunci.add(deck)
     deck_terkunci.add(deck)
 
-
-    for pid in kapal.jaringan.jaringan:
-        kapal.jaringan.jaringan[pid] = []
-
     kapal.generate_koneksi()
     print(f"[Sistem] Deck {deck} berhasil di-lockdown. Semua koneksi di deck ini diputus.")
 
@@ -214,9 +208,6 @@ def _menu_buka_lockdown(kapal, deck_terkunci):
 
     kapal.deck_terkunci.remove(deck)
     deck_terkunci.remove(deck)
-
-    for pid in kapal.jaringan.jaringan:
-        kapal.jaringan.jaringan[pid] = []
 
     kapal.generate_koneksi()
 
@@ -382,7 +373,7 @@ def jalankan_simulasi(kapal, virus, data, save_name, id_pasien_0):
     log_harian      = data.get("log_harian", [])
 
     while True:
-
+        tool.clear_screen()
         _menu_simulasi(data["hari"])
         pilihan = tool.input_angka_tertentu(0, 7, pesan_input=">> ")
 
