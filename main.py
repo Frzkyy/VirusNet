@@ -12,7 +12,10 @@ def about():
     print("Anggota 1: Ketrin Aprilia Pandiangan")
     print("Anggota 2: Rasyikah Azzahra")
     print("=" * 50)
-    input("Tekan key apapun untuk keluar\n")
+    while True:
+        a = input("Ketik exit untuk keluar\n")
+        if a.lower() == "exit":
+            break 
 
 def menu():
     print("=" * 50)

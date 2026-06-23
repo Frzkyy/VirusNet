@@ -84,7 +84,13 @@ def new_file():
     template["nama_kapal"] = input("Masukan Nama Kapal: ")
     print(f"[Sistem] Mengubah Nama Kapal Menjadi \"{template['nama_kapal']}\"...\n")
 
-    jumlah_deck = tool.input_angka(pesan_input="Masukan Jumlah Deck: ")
+    while True:
+        jumlah_deck = tool.input_angka(pesan_input="Masukan Jumlah Deck: ")
+        if jumlah_deck <= 0:
+            print("[System] Error, Deck tidak bisa 0/negatif")
+            continue
+        break
+        
     template["jumlah_deck"] = jumlah_deck
     print(f"[Sistem] Kapal \"{template['nama_kapal']}\" memiliki {jumlah_deck} deck.\n")
 
@@ -105,15 +111,39 @@ def new_file():
 
 
 def pilih_save():
+
     save_list = sorted(os.listdir("data/save"))
 
     if not save_list:
         print("[Error] Tidak ada save file yang tersedia.")
         return None
 
+    sorted_name = []
+    for i, file in enumerate(save_list, 1):
+        data = load_file(file)
+        sorted_name.append(data)
+    
+    n = len(sorted_name)
+
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if sorted_name[j]["hari"] < sorted_name[j + 1]["hari"]:
+                sorted_name[j], sorted_name[j + 1] = sorted_name[j + 1], sorted_name[j]
+    
+    ini_dia = []
+    for i in sorted_name:
+        ini_dia.append(f"{i["save_name"]}.json")
+    
+    save_list = []
+    for i in ini_dia:
+        save_list.append(i.replace(" ", ""))
+
+
     print("=" * 50)
     print("               Pilih Save File")
     print("=" * 50)
+
+
     for i, file in enumerate(save_list, 1):
         data = load_file(file)
         if data:
@@ -129,6 +159,8 @@ def pilih_save():
         return None
 
     return save_list[pilihan - 1]
+
+
 
 
 def load_ship(file):

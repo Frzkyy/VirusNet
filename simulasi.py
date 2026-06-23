@@ -29,7 +29,7 @@ def next_day(kapal, virus, pohon, antrian_isolasi, riwayat_aksi):
     daftar_sembuh    = []
     daftar_meninggal = []
 
-    # ── 0. Penumpang beraktivitas — pindah ruangan secara random ──
+    # 0. Penumpang beraktivitas — pindah ruangan secara random 
     for penumpang in kapal.penumpang:
         if penumpang.status not in ["meninggal", "sembuh"]:
             deck_baru    = random.randint(1, kapal.jumlah_deck)
@@ -40,34 +40,25 @@ def next_day(kapal, virus, pohon, antrian_isolasi, riwayat_aksi):
     # Rebuild graph berdasarkan lokasi baru
     kapal.generate_koneksi()
 
-    # ── 1. Proses penyebaran ────────────────────────────
+    # 1. Proses penyebaran 
     for penumpang in kapal.penumpang:
-
         if penumpang.status == "terinfeksi":
-
             koneksi = kapal.jaringan.ambil_koneksi(penumpang.id)
 
             for target_id in koneksi:
-
                 target = kapal.cari_penumpang(target_id)
-
                 if target and target.status == "rentan":
-
                     if random.random() <= virus.tingkat_penularan:
-
                         target.terpapar()
                         daftar_terpapar.append(target.nama)
 
                         # Catat di pohon penularan
                         _tambah_ke_pohon(pohon, penumpang.id, target.id)
 
-    # ── 2. Update status semua penumpang ────────────────
+    # 2. Update status semua penumpang 
     for penumpang in kapal.penumpang:
-
         status_sebelum = penumpang.status
-
         penumpang.update_status(virus.masa_inkubasi, virus.mortalitas)
-
         status_sesudah = penumpang.status
 
         # Baru jadi terinfeksi → masuk antrian isolasi
@@ -82,7 +73,7 @@ def next_day(kapal, virus, pohon, antrian_isolasi, riwayat_aksi):
         elif status_sebelum == "terinfeksi" and status_sesudah == "meninggal":
             daftar_meninggal.append(penumpang.nama)
 
-    # ── 3. Catat aksi hari ini ke Stack ─────────────────
+    # 3. Catat aksi hari ini ke Stack 
     aksi_hari_ini = {
         "terpapar"  : daftar_terpapar[:],
         "sembuh"    : daftar_sembuh[:],
@@ -90,7 +81,7 @@ def next_day(kapal, virus, pohon, antrian_isolasi, riwayat_aksi):
     }
     riwayat_aksi.push(aksi_hari_ini)
 
-    # ── 4. Tampilkan laporan ─────────────────────────────
+    #  4. Tampilkan laporan 
     if daftar_terpapar:
         print("\nPenumpang terpapar hari ini:")
         for nama in daftar_terpapar:
@@ -124,7 +115,7 @@ def simulasi_selesai(statistik):
     return statistik["terinfeksi"] == 0 and statistik["terpapar"] == 0
 
 
-# ── Helper internal ──────────────────────────────────────
+# Helper internal 
 def _tambah_ke_pohon(pohon, id_sumber, id_target):
     """Cari node sumber di pohon secara rekursif, lalu tambah target sebagai child."""
     node_sumber = _cari_node(pohon.root, id_sumber)
